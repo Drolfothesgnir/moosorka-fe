@@ -1,39 +1,33 @@
-import axios, { AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
-import moment from "moment";
-
-type Entry = {
-  id: number;
-  content: string;
-  created_at: string;
-  updated_at: string | null;
-};
+import { EntrySchema } from "./types";
+import Entry from "./components/Entry/Entry";
+import http from "./utils/http";
+import Header from "./components/Header/Header";
+import Main from "./components/Main/Main";
 
 async function getEntries() {
-  const response: AxiosResponse<Entry[]> = await axios.get(
-    "http://localhost:5000/record"
-  );
+  const response: AxiosResponse<EntrySchema[]> = await http.get("/record");
 
   return response.data;
 }
 
 async function postEntry(content: string) {
-  const response = await axios.post("http://localhost:5000/record", {
+  const response = await http.post("/record", {
     content,
   });
   return response;
 }
 
 async function deleteEntry(id: number) {
-  const response = await axios.delete(`http://localhost:5000/record/${id}`);
+  const response = await http.delete(`/record/${id}`);
   return response;
 }
 
 function App() {
-  const [entries, setEntries] = useState<Entry[]>([]);
+  const [entries, setEntries] = useState<EntrySchema[]>([]);
   const [content, setContent] = useState<string>("");
   const [bgColor, setBgColor] = useState<string>("#ffffff");
-  console.log(bgColor);
 
   function refresh() {
     getEntries().then(setEntries);
@@ -59,25 +53,28 @@ function App() {
 
   return (
     <div style={{ backgroundColor: bgColor }}>
-      <input
-        type="color"
-        value={bgColor}
-        onChange={(e) => setBgColor(e.target.value)}
-      />
-      <ol>
-        {entries.map(({ id, content, created_at }) => (
-          <li key={id}>
-            <h4>{moment.utc(created_at).local().format("LLLL")}</h4>
-            <pre>{content}</pre>
-            <button onClick={() => removeEntry(id)}>Remove entry</button>
-          </li>
-        ))}
-      </ol>
-      <textarea
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-      ></textarea>
-      <button onClick={submit}>Create entry</button>
+      <Header />
+      <Main>
+        <input
+          type="color"
+          value={bgColor}
+          onChange={(e) => setBgColor(e.target.value)}
+        />
+        <ol>
+          {entries.map((entry) => (
+            <Entry
+              key={entry.id}
+              entry={entry}
+              onRemoveClick={() => removeEntry(entry.id)}
+            />
+          ))}
+        </ol>
+        <textarea
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        ></textarea>
+        <button onClick={submit}>Create entry</button>
+      </Main>
     </div>
   );
 }
