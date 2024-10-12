@@ -1,6 +1,8 @@
+@use "../../scss/colors.scss" as colors;
+
 .header {
   padding: 1rem;
   color: #fff;
   text-align: center;
-  background-color: #b624eb;
+  background-color: colors.$main;
 }
