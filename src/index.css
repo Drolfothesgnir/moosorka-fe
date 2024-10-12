@@ -50,3 +50,10 @@ body {
   padding: 0;
   box-sizing: border-box;
 }
+
+button {
+  border: 0;
+  outline: 0;
+  background-color: transparent;
+  cursor: pointer;
+}

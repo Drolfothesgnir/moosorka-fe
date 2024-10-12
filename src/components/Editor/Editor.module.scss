@@ -1,0 +1,32 @@
+.editor {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 1rem;
+
+  .inputBlock {
+    width: 50%;
+
+    textarea {
+      width: 100%;
+      height: 300px;
+      padding: 1rem;
+      resize: none;
+      background-color: #f0f8ff;
+      border: 5px solid #b0c4de;
+      color: #4f4f4f;
+      font-family: "Georgia Regular";
+      font-size: 16px;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    button {
+      display: block;
+      margin-left: auto;
+      padding: 0.2rem;
+      background-color: #98fb98;
+      color: #006400;
+      font-size: 20px;
+    }
+  }
+}

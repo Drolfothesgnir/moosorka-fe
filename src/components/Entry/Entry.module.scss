@@ -1,12 +1,45 @@
 @use "../../scss/colors.scss" as colors;
 
 .entry {
-  font-style: italic;
-  border: 5px solid colors.$main;
+  border: 5px solid #c4e7d4;
   border-radius: 10px;
   padding: 1rem;
+  background-color: #fff8dc;
+  color: #4f4f4f;
 
   & + & {
     margin-top: 10px;
+  }
+
+  .divider {
+    background-color: colors.$main;
+    width: 100%;
+    display: block;
+    height: 1px;
+    margin: 10px 0;
+  }
+
+  pre {
+    font-family: "Georgia Regular";
+  }
+
+  .buttons {
+    button {
+      padding: 0.2rem;
+
+      & + button {
+        margin-left: 10px;
+      }
+
+      &.deleteButton {
+        background-color: #ffcccb;
+        color: #8b0000;
+      }
+
+      &.editButton {
+        background-color: #e6e6fa;
+        color: #4b0082;
+      }
+    }
   }
 }
