@@ -3,6 +3,9 @@ stage 1:
 2. Style editor.
 3. Edit entries;
 4. Add "updated at" field to entry.
+5. Add keyboard shortuts.
+-- Done --
+6. Add Error handling.
 
 stage 2:
 1. Pin entries.

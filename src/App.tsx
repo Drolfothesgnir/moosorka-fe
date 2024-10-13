@@ -1,36 +1,16 @@
-import { AxiosResponse } from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { EntrySchema } from "./types";
-import http from "./utils/http";
 import Header from "./components/Header/Header";
 import Main from "./components/Main/Main";
 import EntryList from "./components/EntryList/EntryList";
 import Editor from "./components/Editor/Editor";
 import NewEntry from "./components/NewEntry/NewEntry";
+import { deleteEntry, getEntries, postEntry, putEntry } from "./utils/requests";
 
 enum EditorState {
   CLOSED = 0,
   NEW = 1,
   EDIT = 2,
-}
-
-async function getEntries() {
-  const response: AxiosResponse<EntrySchema[]> = await http.get("/record");
-
-  return response.data;
-}
-
-async function deleteEntry(id: number) {
-  const response = await http.delete(`/record/${id}`);
-  return response;
-}
-
-async function postEntry(content: string) {
-  return await http.post("/record", { content });
-}
-
-async function putEntry(id: number, content: string) {
-  return await http.put(`/record/${id}`, { content });
 }
 
 function App() {
@@ -46,10 +26,7 @@ function App() {
   }
 
   function removeEntry(id: number) {
-    deleteEntry(id).then((response) => {
-      console.log(response);
-      refresh();
-    });
+    deleteEntry(id).then(refresh);
   }
 
   async function saveEntry() {
@@ -72,15 +49,13 @@ function App() {
     setContent(e.target.value);
   }
 
-  function closeEditor() {
+  const closeEditor = useCallback(() => {
     setEditorState(EditorState.CLOSED);
     setEditId(null);
     setContent("");
-  }
+  }, []);
 
-  function createEntry() {
-    setEditorState(EditorState.NEW);
-  }
+  const createEntry = useCallback(() => setEditorState(EditorState.NEW), []);
 
   function editEntry(entry: EntrySchema) {
     setContent(entry.content);
@@ -88,9 +63,42 @@ function App() {
     setEditorState(EditorState.EDIT);
   }
 
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      switch (e.key) {
+        case "n": {
+          if (editorState === EditorState.CLOSED) {
+            e.preventDefault();
+            createEntry();
+          }
+          break;
+        }
+
+        case "Escape": {
+          if (editorState > EditorState.CLOSED) {
+            closeEditor();
+          }
+          break;
+        }
+
+        default:
+          break;
+      }
+    },
+    [createEntry, closeEditor, editorState]
+  );
+
   useEffect(() => {
     refresh();
   }, []);
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleKeyDown]);
 
   return (
     <>

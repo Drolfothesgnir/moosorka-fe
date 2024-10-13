@@ -24,23 +24,33 @@
     text-wrap: wrap;
   }
 
-  .buttons {
-    button {
-      padding: 0.2rem;
+  .entryFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-      & + button {
-        margin-left: 10px;
-      }
+    .buttons {
+      button {
+        padding: 0.2rem;
 
-      &.deleteButton {
-        background-color: #ffcccb;
-        color: #8b0000;
-      }
+        & + button {
+          margin-left: 10px;
+        }
 
-      &.editButton {
-        background-color: #e6e6fa;
-        color: #4b0082;
+        &.deleteButton {
+          background-color: #ffcccb;
+          color: #8b0000;
+        }
+
+        &.editButton {
+          background-color: #e6e6fa;
+          color: #4b0082;
+        }
       }
+    }
+
+    .updatedAt {
+      font-size: 14px;
     }
   }
 }
