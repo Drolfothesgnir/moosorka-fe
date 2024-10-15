@@ -1,26 +1,31 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import classes from "./Editor.module.scss";
 
 interface EditorProps {
-  content: string;
-  onContentChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  onSaveClick: () => void;
+  initialContent?: string;
+  onContentSave: (content: string) => void;
   onCloseClick: () => void;
   focusOnMount?: boolean;
 }
 
 export default function Editor({
-  content,
-  onContentChange,
-  onSaveClick,
+  initialContent = "",
+  onContentSave,
   onCloseClick,
   focusOnMount = true,
 }: EditorProps) {
+  const [content, setContent] = useState(initialContent);
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && e.shiftKey) {
-      onSaveClick();
+      onContentSave(content);
     }
   };
+
+  const onContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
+    setContent(e.target.value);
+
+  const onSaveClick = () => onContentSave(content);
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
@@ -38,6 +43,7 @@ export default function Editor({
             &times;
           </button>
           <textarea
+            spellCheck
             ref={textareaRef}
             value={content}
             onChange={onContentChange}

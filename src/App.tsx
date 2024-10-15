@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { EntrySchema } from "./types";
 import Header from "./components/Header/Header";
 import Main from "./components/Main/Main";
@@ -15,7 +15,6 @@ enum EditorState {
 
 function App() {
   const [entries, setEntries] = useState<EntrySchema[]>([]);
-  const [content, setContent] = useState("");
   const [editId, setEditId] = useState<number | null>(null);
   const [editorState, setEditorState] = useState<EditorState>(
     EditorState.CLOSED
@@ -29,7 +28,7 @@ function App() {
     deleteEntry(id).then(refresh);
   }
 
-  async function saveEntry() {
+  async function saveEntry(content: string) {
     if (editorState === EditorState.NEW) {
       const response = await postEntry(content);
       setEntries((oldEntries) => [response.data].concat(oldEntries));
@@ -45,27 +44,22 @@ function App() {
     closeEditor();
   }
 
-  function onContentChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
-    setContent(e.target.value);
-  }
-
   const closeEditor = useCallback(() => {
     setEditorState(EditorState.CLOSED);
     setEditId(null);
-    setContent("");
   }, []);
 
   const createEntry = useCallback(() => setEditorState(EditorState.NEW), []);
 
   function editEntry(entry: EntrySchema) {
-    setContent(entry.content);
     setEditId(entry.id);
     setEditorState(EditorState.EDIT);
   }
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      switch (e.key) {
+      switch (e.key.toLowerCase()) {
+        case "т":
         case "n": {
           if (editorState === EditorState.CLOSED) {
             e.preventDefault();
@@ -74,7 +68,7 @@ function App() {
           break;
         }
 
-        case "Escape": {
+        case "escape": {
           if (editorState > EditorState.CLOSED) {
             closeEditor();
           }
@@ -100,6 +94,11 @@ function App() {
     };
   }, [handleKeyDown]);
 
+  let editorContent = "";
+  if (editId) {
+    editorContent = entries.find(({ id }) => id === editId)!.content;
+  }
+
   return (
     <>
       <Header />
@@ -112,9 +111,8 @@ function App() {
       </Main>
       {editorState > 0 ? (
         <Editor
-          content={content}
-          onContentChange={onContentChange}
-          onSaveClick={saveEntry}
+          initialContent={editorContent}
+          onContentSave={saveEntry}
           onCloseClick={closeEditor}
         />
       ) : (
