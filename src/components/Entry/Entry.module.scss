@@ -31,7 +31,10 @@
 
     .buttons {
       button {
-        padding: 0.2rem;
+        padding: 5px 10px;
+        border-radius: 6px; /* Округлённые углы */
+        transition: background-color 0.3s ease, color 0.3s ease; /* Плавный переход */
+        border: none;
 
         & + button {
           margin-left: 10px;
@@ -46,11 +49,28 @@
           background-color: #e6e6fa;
           color: #4b0082;
         }
+
+        /* Состояние до нажатия */
+        &.copy {
+          background-color: #e6e6fa; /* Светло-лавандовый фон */
+          color: #4f4f4f; /* Тёмно-серый текст */
+
+          &.copied {
+            background-color: #98fb98; /* Светло-зелёный фон */
+            color: #006400; /* Тёмно-зелёный текст */
+          }
+
+          &:hover {
+            background-color: #add8e6; /* Светло-голубой при наведении */
+            cursor: pointer;
+          }
+        }
       }
     }
-
-    .updatedAt {
-      font-size: 14px;
-    }
+  }
+  .updatedAt {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 10px;
   }
 }
