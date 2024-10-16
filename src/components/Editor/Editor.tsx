@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import classes from "./Editor.module.scss";
 
 interface EditorProps {
@@ -14,26 +14,23 @@ export default function Editor({
   onCloseClick,
   focusOnMount = true,
 }: EditorProps) {
-  const [content, setContent] = useState(initialContent);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && e.shiftKey) {
-      onContentSave(content);
+      onContentSave(textareaRef.current?.value || "");
     }
   };
 
-  const onContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
-    setContent(e.target.value);
-
-  const onSaveClick = () => onContentSave(content);
-
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const onSaveClick = () => onContentSave(textareaRef.current?.value || "");
 
   useEffect(() => {
+    textareaRef.current!.value = initialContent;
+
     if (focusOnMount) {
       textareaRef.current?.focus();
     }
-  }, [focusOnMount]);
+  }, [focusOnMount, initialContent]);
 
   return (
     <div className={classes.editor}>
@@ -45,8 +42,6 @@ export default function Editor({
           <textarea
             spellCheck
             ref={textareaRef}
-            value={content}
-            onChange={onContentChange}
             onKeyDown={handleKeyDown}
             placeholder="Write your diary entry here... "
           ></textarea>
