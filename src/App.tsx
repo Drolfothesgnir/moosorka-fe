@@ -21,7 +21,7 @@ function App() {
   );
 
   function refresh() {
-    getEntries().then(setEntries);
+    getEntries().then(({ items }) => setEntries(items));
   }
 
   function removeEntry(id: number) {

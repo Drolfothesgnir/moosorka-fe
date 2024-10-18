@@ -2,8 +2,17 @@ import { AxiosResponse } from "axios";
 import { EntrySchema } from "../types";
 import http from "./http";
 
-export async function getEntries() {
-  const response: AxiosResponse<EntrySchema[]> = await http.get("/record");
+export async function getEntries(page: number = 1, per_page: number = 10) {
+  const response: AxiosResponse<{
+    items: EntrySchema[];
+    total: number;
+    has_next: boolean;
+  }> = await http.get("/record", {
+    params: {
+      page,
+      per_page,
+    },
+  });
 
   return response.data;
 }

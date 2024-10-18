@@ -1,9 +1,13 @@
 import classes from "./Main.module.scss";
 
-interface MainProps {
+interface MainProps extends React.HTMLAttributes<HTMLElement> {
   children: React.ReactNode;
 }
 
-export default function Main({ children }: MainProps) {
-  return <main className={classes.main}>{children}</main>;
+export default function Main({ children, ...containerProps }: MainProps) {
+  return (
+    <main className={classes.main} {...containerProps}>
+      {children}
+    </main>
+  );
 }
